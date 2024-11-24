@@ -18,6 +18,7 @@ import { ShipmentsProvider } from './contexts/ShipmentsContext';
 import { AuthProvider } from './auth/AuthContext';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import Login from './auth/Login';
+import { Toaster } from 'react-hot-toast';
 
 // Layout component for protected routes
 const DashboardLayout = ({ children }) => {
@@ -36,105 +37,108 @@ const DashboardLayout = ({ children }) => {
 
 const App = () => {
   return (
-    <Router>
-      <AuthProvider>
-        <ShipmentsProvider>
-          <OrdersProvider>
-            <InventoryProvider>
-              <Routes>
-                {/* Public route */}
-                <Route path="/login" element={<Login />} />
-                
-                {/* Protected routes */}
-                <Route element={<ProtectedRoute />}>
-                  <Route
-                    path="/"
-                    element={
-                      <DashboardLayout>
-                        <Dashboard />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/inventory"
-                    element={
-                      <DashboardLayout>
-                        <Inventory />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/documents"
-                    element={
-                      <DashboardLayout>
-                        <Documents />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/documents/upload"
-                    element={
-                      <DashboardLayout>
-                        <DocumentUpload />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/orders"
-                    element={
-                      <DashboardLayout>
-                        <Orders />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/shipments"
-                    element={
-                      <DashboardLayout>
-                        <Shipments />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/messages"
-                    element={
-                      <DashboardLayout>
-                        <Messages />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/analytics"
-                    element={
-                      <DashboardLayout>
-                        <Analytics />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/help"
-                    element={
-                      <DashboardLayout>
-                        <Help />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route
-                    path="/account"
-                    element={
-                      <DashboardLayout>
-                        <AccountInfo />
-                      </DashboardLayout>
-                    }
-                  />
-                  <Route path="*" element={<Navigate to="/" />} />
-                </Route>
-              </Routes>
-            </InventoryProvider>
-          </OrdersProvider>
-        </ShipmentsProvider>
-      </AuthProvider>
-    </Router>
+    <>
+      <Toaster position="top-right" />
+      <Router>
+        <AuthProvider>
+          <ShipmentsProvider>
+            <OrdersProvider>
+              <InventoryProvider>
+                <Routes>
+                  {/* Public route */}
+                  <Route path="/login" element={<Login />} />
+                  
+                  {/* Protected routes */}
+                  <Route element={<ProtectedRoute />}>
+                    <Route
+                      path="/"
+                      element={
+                        <DashboardLayout>
+                          <Dashboard />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/inventory"
+                      element={
+                        <DashboardLayout>
+                          <Inventory />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/documents"
+                      element={
+                        <DashboardLayout>
+                          <Documents />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/documents/upload"
+                      element={
+                        <DashboardLayout>
+                          <DocumentUpload />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/orders"
+                      element={
+                        <DashboardLayout>
+                          <Orders />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/shipments"
+                      element={
+                        <DashboardLayout>
+                          <Shipments />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/messages"
+                      element={
+                        <DashboardLayout>
+                          <Messages />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/analytics"
+                      element={
+                        <DashboardLayout>
+                          <Analytics />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/help"
+                      element={
+                        <DashboardLayout>
+                          <Help />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/account"
+                      element={
+                        <DashboardLayout>
+                          <AccountInfo />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </Route>
+                </Routes>
+              </InventoryProvider>
+            </OrdersProvider>
+          </ShipmentsProvider>
+        </AuthProvider>
+      </Router>
+    </>
   );
 };
 
