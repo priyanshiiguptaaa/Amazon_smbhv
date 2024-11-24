@@ -1,7 +1,3 @@
-Here’s a more polished and visually appealing version of your README file:
-
----
-
 # 🌍 **Export Management Platform for Indian SMBs**  
 **A comprehensive platform to streamline international export processes for Indian small and medium businesses.**  
 *Built with innovation for the Amazon Hackathon.*
@@ -150,5 +146,3 @@ This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE)
 Feel free to reach out if you have any questions or suggestions. 🌟
 
 --- 
-
-This version uses emojis, clean formatting, and a structured layout to improve readability and engagement.
