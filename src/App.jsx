@@ -12,6 +12,8 @@ import Help from './pages/Help';
 import AccountInfo from './pages/AccountInfo';
 import Messages from './pages/Messages';
 import Chatbot from './components/Chatbot';
+import Chat from './components/Chat';
+import VideoConference from './components/VideoConference';
 import { InventoryProvider } from './contexts/InventoryContext';
 import { OrdersProvider } from './contexts/OrdersContext';
 import { ShipmentsProvider } from './contexts/ShipmentsContext';
@@ -19,18 +21,49 @@ import { AuthProvider } from './auth/AuthContext';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import Login from './auth/Login';
 import { Toaster } from 'react-hot-toast';
+import { v4 as uuidv4 } from 'uuid';
 
 // Layout component for protected routes
 const DashboardLayout = ({ children }) => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isVideoCallActive, setIsVideoCallActive] = useState(false);
+  const [roomId, setRoomId] = useState(null);
+
+  const startVideoCall = () => {
+    const newRoomId = uuidv4();
+    setRoomId(newRoomId);
+    setIsVideoCallActive(true);
+  };
 
   return (
     <div className="flex">
-      <Navigation isCollapsed={isNavCollapsed} onCollapse={setIsNavCollapsed} />
+      <Navigation 
+        isCollapsed={isNavCollapsed} 
+        onCollapse={setIsNavCollapsed}
+        onStartVideoCall={startVideoCall}
+        onOpenChat={() => setIsChatOpen(true)}
+      />
       <main className={`flex-1 ${isNavCollapsed ? 'ml-20' : 'ml-64'} bg-[#EAEDED] min-h-screen transition-all duration-300`}>
         {children}
       </main>
       <Chatbot />
+      {isChatOpen && (
+        <Chat
+          userId="current-user-id" // Replace with actual user ID from auth context
+          userName="John Doe" // Replace with actual user name
+          onClose={() => setIsChatOpen(false)}
+        />
+      )}
+      {isVideoCallActive && (
+        <VideoConference
+          roomId={roomId}
+          onClose={() => {
+            setIsVideoCallActive(false);
+            setRoomId(null);
+          }}
+        />
+      )}
     </div>
   );
 };
