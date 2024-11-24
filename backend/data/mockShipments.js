@@ -1,0 +1,112 @@
+const mockShipments = [
+    {
+        shipmentId: "SHP-2023-001",
+        orderId: "ORD-2023-001",
+        customerName: "Ethnic Boutique LLC",
+        destination: "New York, USA",
+        origin: "Mumbai, India",
+        shipmentDate: "2023-10-25",
+        status: "In Transit",
+        carrier: "Maersk Line",
+        trackingNumber: "MSK7391264",
+        containerNumber: "MSKU1234567",
+        estimatedDelivery: "2023-11-15",
+        shippingMethod: "Sea Freight",
+        documents: {
+            billOfLading: true,
+            commercialInvoice: true,
+            packingList: true,
+            certificateOfOrigin: true
+        },
+        weight: 1250,
+        weightUnit: "kg",
+        volume: 12.5,
+        volumeUnit: "cbm",
+        customsClearance: "Pending",
+        customsValue: 4499.50,
+        currency: "USD"
+    },
+    {
+        shipmentId: "SHP-2023-002",
+        orderId: "ORD-2023-002",
+        customerName: "Spice World GmbH",
+        destination: "Hamburg, Germany",
+        origin: "Chennai, India",
+        shipmentDate: "2023-10-23",
+        status: "Customs Clearance",
+        carrier: "MSC",
+        trackingNumber: "MSC8472951",
+        containerNumber: "MSCU7654321",
+        estimatedDelivery: "2023-11-20",
+        shippingMethod: "Sea Freight",
+        documents: {
+            billOfLading: true,
+            commercialInvoice: true,
+            packingList: true,
+            certificateOfOrigin: true
+        },
+        weight: 5000,
+        weightUnit: "kg",
+        volume: 20,
+        volumeUnit: "cbm",
+        customsClearance: "In Progress",
+        customsValue: 3897.00,
+        currency: "USD"
+    },
+    {
+        shipmentId: "SHP-2023-003",
+        orderId: "ORD-2023-003",
+        customerName: "Luxury Goods Co",
+        destination: "Tokyo, Japan",
+        origin: "Delhi, India",
+        shipmentDate: "2023-10-20",
+        status: "Delivered",
+        carrier: "DHL Express",
+        trackingNumber: "DHL9517536",
+        containerNumber: null,
+        estimatedDelivery: "2023-10-25",
+        shippingMethod: "Air Freight",
+        documents: {
+            billOfLading: true,
+            commercialInvoice: true,
+            packingList: true,
+            certificateOfOrigin: true
+        },
+        weight: 250,
+        weightUnit: "kg",
+        volume: 2.5,
+        volumeUnit: "cbm",
+        customsClearance: "Completed",
+        customsValue: 12500.00,
+        currency: "USD"
+    },
+    {
+        shipmentId: "SHP-2023-004",
+        orderId: "ORD-2023-004",
+        customerName: "Traditional Arts Gallery",
+        destination: "Dubai, UAE",
+        origin: "Jaipur, India",
+        shipmentDate: "2023-10-18",
+        status: "Arrived at Port",
+        carrier: "Emirates SkyCargo",
+        trackingNumber: "EK7539514",
+        containerNumber: null,
+        estimatedDelivery: "2023-10-28",
+        shippingMethod: "Air Freight",
+        documents: {
+            billOfLading: true,
+            commercialInvoice: true,
+            packingList: true,
+            certificateOfOrigin: true
+        },
+        weight: 750,
+        weightUnit: "kg",
+        volume: 5.5,
+        volumeUnit: "cbm",
+        customsClearance: "Completed",
+        customsValue: 8750.00,
+        currency: "USD"
+    }
+];
+
+module.exports = mockShipments;

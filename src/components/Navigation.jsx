@@ -1,91 +1,86 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Package, FileText, Settings, HelpCircle, Search, Menu, X } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  Package, 
+  FileText, 
+  ShoppingCart, 
+  TrendingUp,
+  Ship,
+  HelpCircle,
+  User,
+  MessageSquare,
+  PanelLeftClose,
+  PanelLeftOpen
+} from 'lucide-react';
 
-const NavLink = ({ icon: Icon, text, to, onClick }) => {
+const Navigation = ({ isCollapsed, onCollapse }) => {
   const location = useLocation();
-  const isActive = location.pathname === to;
-  
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className={`inline-flex items-center px-3 py-2 text-sm font-medium text-white 
-        ${isActive ? 'bg-amazon-lightBlue text-amazon-orange' : 'hover:text-amazon-orange hover:bg-amazon-lightBlue'} 
-        rounded-md`}
-    >
-      <Icon className="h-5 w-5 mr-2" />
-      {text}
-    </Link>
-  );
-};
 
-const SearchBar = () => (
-  <div className="flex items-center rounded-md bg-amazon-lightBlue px-4 py-2 max-w-xs">
-    <Search className="h-5 w-5 text-gray-400 min-w-[20px]" />
-    <input
-      type="text"
-      placeholder="Search shipments..."
-      className="ml-2 bg-transparent text-sm text-white placeholder-gray-400 focus:outline-none w-full"
-    />
-  </div>
-);
-
-const Navigation = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const isActive = (path) => {
+    return location.pathname === path;
   };
 
+  const navItems = [
+    { path: '/', icon: LayoutDashboard, text: 'Dashboard' },
+    { path: '/inventory', icon: Package, text: 'Inventory' },
+    { path: '/documents', icon: FileText, text: 'Documents' },
+    { path: '/orders', icon: ShoppingCart, text: 'Orders' },
+    { path: '/shipments', icon: Ship, text: 'Shipments' },
+    { path: '/messages', icon: MessageSquare, text: 'Messages' },
+    { path: '/analytics', icon: TrendingUp, text: 'Analytics' },
+    { path: '/help', icon: HelpCircle, text: 'Help' },
+    { path: '/account', icon: User, text: 'Account' }
+  ];
+
   return (
-    <nav className="bg-amazon-blue">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo and Desktop Navigation */}
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Link to="/" className="text-white text-xl font-bold">
-                SMB Exports
-              </Link>
-            </div>
-            <div className="hidden md:ml-6 md:flex md:space-x-4">
-              <NavLink icon={Package} text="Shipments" to="/shipments" />
-              <NavLink icon={FileText} text="Documents" to="/documents" />
-              <NavLink icon={Settings} text="Settings" to="/settings" />
-              <NavLink icon={HelpCircle} text="Help" to="/help" />
-            </div>
-          </div>
-
-          {/* Search and Mobile Menu Button */}
-          <div className="flex items-center">
-            <div className="hidden sm:block">
-              <SearchBar />
-            </div>
-            <button
-              onClick={toggleMobileMenu}
-              className="md:hidden ml-4 text-white hover:text-amazon-orange"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+    <nav className={`fixed h-full ${isCollapsed ? 'w-20' : 'w-64'} bg-[#232F3E] text-white p-4 transition-all duration-300 ease-in-out`}>
+      <div className="flex items-center justify-between mb-8">
+        <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : ''}`}>
+          <img src="/cargo-logo.svg" alt="Cargo Connect Logo" className="h-8" />
+          {!isCollapsed && <span className="ml-2 text-lg font-semibold">Cargo Connect</span>}
         </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              <NavLink icon={Package} text="Shipments" to="/shipments" onClick={toggleMobileMenu} />
-              <NavLink icon={FileText} text="Documents" to="/documents" onClick={toggleMobileMenu} />
-              <NavLink icon={Settings} text="Settings" to="/settings" onClick={toggleMobileMenu} />
-              <NavLink icon={HelpCircle} text="Help" to="/help" onClick={toggleMobileMenu} />
-            </div>
-            <div className="px-2 pb-3">
-              <SearchBar />
-            </div>
-          </div>
+        {!isCollapsed && (
+          <button
+            onClick={() => onCollapse(!isCollapsed)}
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            <PanelLeftClose className="h-5 w-5" />
+          </button>
         )}
       </div>
+      <div className="space-y-2">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center ${isCollapsed ? 'justify-center' : ''} space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                isActive(item.path)
+                  ? 'bg-[#FF9900] text-white'
+                  : 'hover:bg-[#394759] text-gray-300'
+              } group relative`}
+            >
+              <Icon className={`${isCollapsed ? 'h-6 w-6' : 'h-5 w-5'} transition-all duration-300`} />
+              {!isCollapsed && <span className="ml-3">{item.text}</span>}
+              {isCollapsed && (
+                <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                  {item.text}
+                </div>
+              )}
+            </Link>
+          );
+        })}
+      </div>
+      {isCollapsed && (
+        <button
+          onClick={() => onCollapse(!isCollapsed)}
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-gray-400 hover:text-white transition-colors"
+        >
+          <PanelLeftOpen className="h-5 w-5" />
+        </button>
+      )}
     </nav>
   );
 };

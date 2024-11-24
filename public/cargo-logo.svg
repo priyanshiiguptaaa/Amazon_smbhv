@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#232F3E"/>
+  
+  <!-- Cargo Box -->
+  <path d="M156 196H356V356H156V196Z" fill="#FF9900"/>
+  <path d="M156 196L256 146L356 196" fill="#FF9900"/>
+  
+  <!-- Lines -->
+  <path d="M206 246V306" stroke="white" stroke-width="12"/>
+  <path d="M256 246V306" stroke="white" stroke-width="12"/>
+  <path d="M306 246V306" stroke="white" stroke-width="12"/>
+</svg>
