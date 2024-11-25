@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="#f8f9fa"/>
+    
+    <!-- Navigation Sidebar -->
+    <rect x="0" y="0" width="250" height="800" fill="#ffffff" stroke="#e9ecef"/>
+    <!-- Logo Area -->
+    <rect x="20" y="20" width="210" height="60" rx="5" fill="#f1f3f5"/>
+    <!-- Nav Items -->
+    <rect x="20" y="100" width="210" height="50" rx="5" fill="#f1f3f5"/>
+    <rect x="20" y="160" width="210" height="50" rx="5" fill="#f1f3f5"/>
+    <rect x="20" y="220" width="210" height="50" rx="5" fill="#e9ecef"/>
+    <rect x="20" y="280" width="210" height="50" rx="5" fill="#f1f3f5"/>
+    
+    <!-- Main Content Area -->
+    <rect x="270" y="0" width="910" height="800" fill="#ffffff"/>
+    
+    <!-- Header -->
+    <rect x="290" y="20" width="870" height="60" rx="5" fill="#f8f9fa"/>
+    
+    <!-- Map View -->
+    <rect x="290" y="100" width="570" height="400" rx="8" fill="#ffffff" stroke="#e9ecef"/>
+    <!-- Map Placeholder -->
+    <rect x="310" y="120" width="530" height="360" rx="5" fill="#f1f3f5"/>
+    
+    <!-- Shipment Details -->
+    <rect x="880" y="100" width="280" height="400" rx="8" fill="#ffffff" stroke="#e9ecef"/>
+    <!-- Details Sections -->
+    <rect x="900" y="120" width="240" height="80" rx="5" fill="#f8f9fa"/>
+    <rect x="900" y="220" width="240" height="80" rx="5" fill="#f8f9fa"/>
+    <rect x="900" y="320" width="240" height="80" rx="5" fill="#f8f9fa"/>
+    
+    <!-- Timeline -->
+    <rect x="290" y="520" width="870" height="260" rx="8" fill="#ffffff" stroke="#e9ecef"/>
+    <!-- Timeline Points -->
+    <circle cx="330" cy="580" r="10" fill="#40c057"/>
+    <circle cx="530" cy="580" r="10" fill="#40c057"/>
+    <circle cx="730" cy="580" r="10" fill="#fd7e14"/>
+    <circle cx="930" cy="580" r="10" fill="#e9ecef"/>
+    <!-- Timeline Lines -->
+    <line x1="340" y1="580" x2="520" y2="580" stroke="#40c057" stroke-width="2"/>
+    <line x1="540" y1="580" x2="720" y2="580" stroke="#40c057" stroke-width="2"/>
+    <line x1="740" y1="580" x2="920" y2="580" stroke="#e9ecef" stroke-width="2"/>
+    <!-- Timeline Labels -->
+    <rect x="310" y="600" width="100" height="40" rx="5" fill="#f8f9fa"/>
+    <rect x="510" y="600" width="100" height="40" rx="5" fill="#f8f9fa"/>
+    <rect x="710" y="600" width="100" height="40" rx="5" fill="#f8f9fa"/>
+    <rect x="910" y="600" width="100" height="40" rx="5" fill="#f8f9fa"/>
+    
+    <!-- Status Updates -->
+    <rect x="310" y="660" width="830" height="100" rx="5" fill="#f8f9fa"/>
+</svg>

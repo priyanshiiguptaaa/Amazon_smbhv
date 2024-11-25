@@ -1,54 +1,55 @@
-const mongoose = require('mongoose');
+// In-memory document storage
+const documents = [];
 
-const documentSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  shipment: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Shipment'
-  },
-  type: {
-    type: String,
-    enum: ['invoice', 'packing_list', 'bill_of_lading', 'customs_declaration', 'certificate_of_origin', 'other'],
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  fileUrl: {
-    type: String,
-    required: true
-  },
-  mimeType: String,
-  size: Number,
-  status: {
-    type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
-  },
-  metadata: {
-    documentNumber: String,
-    issueDate: Date,
-    expiryDate: Date,
-    issuingAuthority: String
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+class Document {
+    constructor(data) {
+        this.id = data.id || Math.random().toString(36).substr(2, 9);
+        this.user = data.user;
+        this.shipment = data.shipment;
+        this.type = data.type;
+        this.name = data.name;
+        this.description = data.description;
+        this.fileUrl = data.fileUrl;
+        this.status = data.status || 'pending';
+        this.createdAt = data.createdAt || new Date();
+        this.updatedAt = data.updatedAt || new Date();
+    }
 
-documentSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
+    static create(data) {
+        const doc = new Document(data);
+        documents.push(doc);
+        return doc;
+    }
 
-module.exports = mongoose.model('Document', documentSchema);
+    static findById(id) {
+        return documents.find(doc => doc.id === id);
+    }
+
+    static find(query = {}) {
+        return documents.filter(doc => {
+            for (let key in query) {
+                if (doc[key] !== query[key]) return false;
+            }
+            return true;
+        });
+    }
+
+    static update(id, data) {
+        const index = documents.findIndex(doc => doc.id === id);
+        if (index === -1) return null;
+        
+        const updated = { ...documents[index], ...data, updatedAt: new Date() };
+        documents[index] = updated;
+        return updated;
+    }
+
+    static delete(id) {
+        const index = documents.findIndex(doc => doc.id === id);
+        if (index === -1) return false;
+        
+        documents.splice(index, 1);
+        return true;
+    }
+}
+
+module.exports = Document;

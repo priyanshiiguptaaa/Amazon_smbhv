@@ -21,7 +21,13 @@ A comprehensive platform to streamline international export processes for Indian
 - File Upload: Multer
 
 ## Prerequisites
-
+AMAZON_REFRESH_TOKEN=your_refresh_token
+AMAZON_CLIENT_ID=your_client_id
+AMAZON_CLIENT_SECRET=your_client_secret
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_SELLING_PARTNER_ROLE=your_role_arn
+AMAZON_MARKETPLACE_ID=your_marketplace_id
 - Node.js (v14 or higher)
 - MongoDB (local or cloud instance)
 - npm or yarn

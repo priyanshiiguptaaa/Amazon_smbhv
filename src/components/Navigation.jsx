@@ -40,9 +40,9 @@ const Navigation = ({ isCollapsed, onCollapse, onStartVideoCall, onOpenChat }) =
       <div className="flex items-center justify-between mb-8">
         <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : ''}`}>
           <img 
-            src="/logo.svg" 
+            src="/image.png" 
             alt="Cargo Connect" 
-            className={`${isCollapsed ? 'h-8 w-8' : 'h-8'} object-contain`} 
+            className={`${isCollapsed ? 'h-8 w-8' : 'h-8'} object-contain bg-white rounded-sm`} 
           />
           {!isCollapsed && <span className="ml-2 text-lg font-semibold">Cargo Connect</span>}
         </div>

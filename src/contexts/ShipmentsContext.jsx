@@ -8,7 +8,7 @@ export const useShipments = () => {
     if (!context) {
         throw new Error('useShipments must be used within a ShipmentsProvider');
     }
-    return context;
+    return context;i
 };
 
 export const ShipmentsProvider = ({ children }) => {

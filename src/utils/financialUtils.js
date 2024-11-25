@@ -1,10 +1,47 @@
 import axios from 'axios';
 
+// Cache for exchange rates
+let ratesCache = {
+  rates: null,
+  timestamp: null,
+  CACHE_DURATION: 1000 * 60 * 60 // 1 hour
+};
+
 // Currency Conversion
 export const convertCurrency = async (amount, fromCurrency, toCurrency) => {
   try {
-    // Mock exchange rates (replace with actual API call)
-    const exchangeRates = {
+    // Check if we need to fetch new rates
+    const now = Date.now();
+    if (!ratesCache.rates || !ratesCache.timestamp || (now - ratesCache.timestamp > ratesCache.CACHE_DURATION)) {
+      const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+      ratesCache.rates = response.data.rates;
+      ratesCache.timestamp = now;
+    }
+
+    // Convert both currencies through USD as base
+    const fromRate = fromCurrency === 'USD' ? 1 : ratesCache.rates[fromCurrency];
+    const toRate = toCurrency === 'USD' ? 1 : ratesCache.rates[toCurrency];
+    
+    if (!fromRate || !toRate) {
+      throw new Error(`Invalid currency code: ${!fromRate ? fromCurrency : toCurrency}`);
+    }
+
+    const convertedAmount = (amount / fromRate) * toRate;
+
+    return {
+      originalAmount: amount,
+      originalCurrency: fromCurrency,
+      convertedAmount: Number(convertedAmount.toFixed(2)),
+      targetCurrency: toCurrency,
+      exchangeRate: Number((toRate / fromRate).toFixed(6)),
+      timestamp: new Date().toISOString(),
+      isLive: true
+    };
+  } catch (error) {
+    console.error('Error converting currency:', error);
+    
+    // Fallback to static rates if API fails
+    const fallbackRates = {
       USD: 1,
       EUR: 0.85,
       GBP: 0.73,
@@ -12,21 +49,19 @@ export const convertCurrency = async (amount, fromCurrency, toCurrency) => {
       AED: 3.67
     };
 
-    const fromRate = exchangeRates[fromCurrency];
-    const toRate = exchangeRates[toCurrency];
+    const fromRate = fallbackRates[fromCurrency];
+    const toRate = fallbackRates[toCurrency];
     const convertedAmount = (amount / fromRate) * toRate;
 
     return {
       originalAmount: amount,
       originalCurrency: fromCurrency,
-      convertedAmount: convertedAmount,
+      convertedAmount: Number(convertedAmount.toFixed(2)),
       targetCurrency: toCurrency,
-      exchangeRate: toRate / fromRate,
-      timestamp: new Date().toISOString()
+      exchangeRate: Number((toRate / fromRate).toFixed(6)),
+      timestamp: new Date().toISOString(),
+      isLive: false
     };
-  } catch (error) {
-    console.error('Error converting currency:', error);
-    throw error;
   }
 };
 

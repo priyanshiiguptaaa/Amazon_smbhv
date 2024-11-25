@@ -1,0 +1,135 @@
+Amazon Smbhav Hackathon 2024: Prototype Phase Submission
+
+1. Team Details
+Team Name: Byte Me 
+Team Members: 
+- Kushal Goyal
+- Priyanshi Gupta
+- Niharika Kashyap
+- Mehul Gupta
+
+2. Theme Details 
+Theme Name: Simplify Communication for Cross-Border Exports Between Carriers and Sellers 
+
+Theme Benefits:
+The chosen theme aims to empower Indian Small and Medium Businesses (SMBs) to seamlessly enter the global marketplace. By simplifying cross-border communication, it reduces logistical challenges, enabling SMBs to grow through international sales. For Amazon, this approach is projected to drive increased traffic from India to its global platforms, generating revenue growth and expanding opportunities in the international sector.
+
+3. Idea and Approach Details 
+Solution Overview: 
+ExportSMB is a comprehensive platform designed to revolutionize how Indian SMBs handle international trade. Our solution addresses critical challenges including high shipping costs, returns management, currency exchange complexities, language barriers, regulatory compliance, and customer support through an integrated, AI-powered platform.
+
+Technical Stack: 
+Frontend: 
+- ReactJS for responsive and interactive UI
+- D3.js, Chart.js for data visualization
+- Socket.io for real-time communication
+
+Backend: 
+- Node.js with Express
+- Amazon Selling Partner API integration
+- MongoDB for data storage
+- Redis for caching
+- AWS Services (EC2, S3, Lambda, RDS)
+
+AI/ML Components:
+- TensorFlow/PyTorch for custom ML models
+- GenAI for document processing and chat
+- Opus-MT for real-time translation
+
+Security:
+- OAuth 2.0 and JWT for authentication
+- End-to-end encryption
+- GDPR compliance implementation
+
+Decision Rationale:
+Assumptions: 
+- High scalability requirements for serving numerous SMBs
+- Critical need for real-time communication and tracking
+- Essential requirement for document management and translation
+- Mandatory integration with Amazon Selling Partner API
+
+Constraints: 
+- Adherence to Amazon's security guidelines
+- Budget optimization through open-source solutions
+- Cross-platform compatibility requirements
+- Data privacy regulations compliance
+
+Innovation Highlights: 
+1. AI-Powered Communication Hub:
+- Real-time translation for eliminating language barriers
+- Automated query resolution
+- Smart document processing and verification
+
+2. Compliance Assistant:
+- Automated document checklist generation
+- Country-specific regulation guidelines
+- Real-time compliance verification
+
+3. Smart Pricing Engine:
+- Real-time currency conversion
+- Market-based pricing recommendations
+- Competitive analysis tools
+
+4. Quality Control System:
+- AI-driven packaging recommendations
+- Quality monitoring and alerts
+- Predictive maintenance suggestions
+
+Feasibility and User-Friendliness:
+- Intuitive, clean UI design
+- Multi-language support
+- Centralized document management
+- Automated shipping partner comparison
+- Integrated return management system
+
+Success Metrics:
+- 60% reduction in documentation processing time
+- 40% improvement in communication efficiency
+- 30% cost savings in shipping negotiations
+- 20% increase in successful international transactions
+- 100% compliance with international regulations
+
+4. Methodology/Architecture Diagram
+[To be added: System architecture diagram showing the interaction between frontend, backend, and various services]
+
+5. Open Source Disclosure:
+1. React (MIT License)
+   - Version: 18.2.0
+   - Used directly for frontend development
+   - https://github.com/facebook/react
+
+2. Node.js (MIT License)
+   - Version: 18.x
+   - Used directly for backend development
+   - https://github.com/nodejs/node
+
+3. MongoDB (Server Side Public License)
+   - Version: 6.0
+   - Used as primary database
+   - https://github.com/mongodb/mongo
+
+4. Socket.io (MIT License)
+   - Version: 4.7.2
+   - Used for real-time communication
+   - https://github.com/socketio/socket.io
+
+5. D3.js (BSD 3-Clause License)
+   - Version: 7.8.5
+   - Used for data visualization
+   - https://github.com/d3/d3
+
+6. Prototype Demonstration
+Demo Link: [To be added]
+Deployment Link: [To be added]
+Source Code Repository: [To be added]
+README Instructions: [To be added]
+
+Submission Checklist:
+✅ Sections 1-3 carried forward and updated
+✅ Technical architecture defined
+✅ Open source components disclosed
+⏳ Architecture diagram pending
+⏳ Demo link pending
+⏳ Deployment link pending
+⏳ Source code repository pending
+⏳ README instructions pending

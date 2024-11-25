@@ -93,6 +93,21 @@ const Help = () => {
               </a>
 
               <a
+                href="https://en.wikipedia.org/wiki/International_trade_law"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block p-4 border border-[#D5D9D9] rounded-lg hover:border-[#FF9900] transition-colors"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-medium text-[#0F1111]">International Trade Laws</h3>
+                  <ExternalLink className="h-4 w-4 text-[#565959]" />
+                </div>
+                <p className="text-sm text-[#565959]">
+                  Learn about country-specific regulations and trade laws
+                </p>
+              </a>
+
+              <a
                 href="#"
                 className="block p-4 border border-[#D5D9D9] rounded-lg hover:border-[#FF9900] transition-colors"
               >
