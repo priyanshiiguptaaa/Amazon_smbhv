@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HelpCircle, ExternalLink } from 'lucide-react';
+import TaxRegulationsComponent from '../components/TaxRegulations';
 
 const HelpSection = ({ title, children }) => (
   <div className="mb-8">
@@ -12,6 +13,8 @@ const HelpSection = ({ title, children }) => (
 );
 
 const Help = () => {
+  const [showTaxRegulations, setShowTaxRegulations] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#EAEDED] py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,6 +77,31 @@ const Help = () => {
                 <li>Track order status</li>
                 <li>Handle returns and refunds</li>
               </ul>
+            </div>
+          </HelpSection>
+
+          <HelpSection title="Tax & Duty Regulations">
+            <div className="prose prose-sm max-w-none text-[#0F1111]">
+              <p className="mb-4">
+                Understand tax obligations and duty regulations for different countries:
+              </p>
+              <ul className="space-y-2 list-disc pl-5 text-[#0F1111] mb-4">
+                <li>Import duties and tariffs</li>
+                <li>VAT and sales tax requirements</li>
+                <li>Documentation and compliance</li>
+                <li>Restricted items and special permits</li>
+              </ul>
+              <button
+                onClick={() => setShowTaxRegulations(!showTaxRegulations)}
+                className="bg-[#FF9900] text-white px-4 py-2 rounded hover:bg-[#FF9900]/90 transition-colors mb-4"
+              >
+                {showTaxRegulations ? 'Hide Regulations' : 'View Regulations'}
+              </button>
+              {showTaxRegulations && (
+                <div className="mt-4 border rounded-lg p-4">
+                  <TaxRegulationsComponent />
+                </div>
+              )}
             </div>
           </HelpSection>
 

@@ -11,6 +11,8 @@ import Analytics from './pages/Analytics';
 import Help from './pages/Help';
 import AccountInfo from './pages/AccountInfo';
 import Messages from './pages/Messages';
+import TaxRegulations from './pages/TaxRegulations';
+import ReturnLabels from './pages/ReturnLabels';
 import Chatbot from './components/Chatbot';
 import Chat from './components/Chat';
 import VideoConference from './components/VideoConference';
@@ -160,6 +162,22 @@ const App = () => {
                       element={
                         <DashboardLayout>
                           <AccountInfo />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/tax-regulations"
+                      element={
+                        <DashboardLayout>
+                          <TaxRegulations />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/return-labels"
+                      element={
+                        <DashboardLayout>
+                          <ReturnLabels />
                         </DashboardLayout>
                       }
                     />

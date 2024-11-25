@@ -8,12 +8,7 @@ const Chatbot = () => {
   const [isMinimized, setIsMinimized] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const location = useLocation();
-  const [messages, setMessages] = useState([
-    {
-      type: 'bot',
-      content: 'Hello! I\'m your Amazon Export Assistant. How can I help you today?'
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -34,7 +29,7 @@ const Chatbot = () => {
           ...prev,
           {
             type: 'bot',
-            content: 'Welcome to Cargo Connect! 👋 I\'m your AI assistant, here to help you with exports. Feel free to ask me anything about orders, shipments, or documentation. Click the chat icon anytime to reach me!'
+            content: 'Welcome to Cargo Connect! 👋 I\'m CC, your AI assistant, here to help you with exports. Feel free to ask me anything about orders, shipments, or documentation.'
           }
         ]);
         setHasShownWelcome(true);
@@ -103,7 +98,7 @@ const Chatbot = () => {
       <div className="flex items-center justify-between p-4 border-b bg-[#232F3E] text-white rounded-t-lg">
         <div className="flex items-center space-x-2">
           <MessageSquare className="h-5 w-5" />
-          <span className="font-medium">Export Assistant</span>
+          <span className="font-medium">CC - AI Assistant</span>
         </div>
         <div className="flex items-center space-x-2">
           <button
