@@ -1,111 +1,148 @@
-# Export Management Platform for Indian SMBs
+# 🌍 **Export Management Platform for Indian SMBs**  
+**A comprehensive platform to streamline international export processes for Indian small and medium businesses.**  
+*Built with innovation for the Amazon Hackathon.*
 
-A comprehensive platform to streamline international export processes for Indian small and medium businesses. Built for the Amazon Hackathon.
+---
 
-## Features
+## 🚀 **Features**  
+- 🔒 **User Authentication & Authorization**  
+- 📦 **Shipment Management**  
+- 🗂️ **Document Management**  
+- 🌐 **Real-time Carrier Integration**  
+- 📊 **Rate Comparison**  
+- 🗓️ **Schedule Management**  
+- ✅ **Document Upload & Verification**  
 
-- User Authentication & Authorization
-- Shipment Management
-- Document Management
-- Real-time Carrier Integration
-- Rate Comparison
-- Schedule Management
-- Document Upload & Verification
+---
 
-## Tech Stack
+## 🛠️ **Tech Stack**  
 
-- Frontend: React + Vite
-- Backend: Node.js + Express
-- Database: MongoDB
-- Authentication: JWT
-- File Upload: Multer
+| Component    | Technology         |
+|--------------|--------------------|
+| **Frontend** | React + Vite       |
+| **Backend**  | Node.js + Express  |
+| **Database** | MongoDB            |
+| **Auth**     | JWT                |
+| **File Handling** | Multer         |
 
-## Prerequisites
-AMAZON_REFRESH_TOKEN=your_refresh_token
-AMAZON_CLIENT_ID=your_client_id
-AMAZON_CLIENT_SECRET=your_client_secret
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_SELLING_PARTNER_ROLE=your_role_arn
-AMAZON_MARKETPLACE_ID=your_marketplace_id
-- Node.js (v14 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn
+---
 
-## Setup Instructions
+## 📋 **Prerequisites**  
+Ensure the following are installed:  
+- **Node.js** (v14 or higher)  
+- **MongoDB** (local or cloud instance)  
+- **npm** or **yarn**  
 
-1. Clone the repository
+---
+
+## ⚙️ **Setup Instructions**  
+
+### 1️⃣ Clone the Repository  
 ```bash
 git clone <repository-url>
 cd amazon-exportSMB
 ```
 
-2. Install Frontend Dependencies
+### 2️⃣ Install Frontend Dependencies  
 ```bash
 npm install
 ```
 
-3. Install Backend Dependencies
+### 3️⃣ Install Backend Dependencies  
 ```bash
 cd backend
 npm install
 ```
 
-4. Configure Environment Variables
-- Copy `.env.example` to `.env` in the backend directory
-- Update the environment variables as needed
+### 4️⃣ Configure Environment Variables  
+- Copy `.env.example` to `.env` in the `backend` directory  
+- Update the environment variables as required  
 
-5. Start MongoDB
-- Make sure MongoDB is running on your system
-- Default connection URL: mongodb://localhost:27017/freshfruits
+### 5️⃣ Start MongoDB  
+Ensure MongoDB is running. Default connection:  
+```plaintext
+mongodb://localhost:27017/freshfruits
+```
 
-6. Start the Backend Server
+### 6️⃣ Start the Backend Server  
 ```bash
 cd backend
 npm run dev
 ```
 
-7. Start the Frontend Development Server
+### 7️⃣ Start the Frontend Server  
+Open a new terminal and run:  
 ```bash
-# In a new terminal, from the project root
 npm run dev
 ```
 
-## API Documentation
+---
 
-### Authentication Endpoints
-- POST /api/auth/register - Register a new user
-- POST /api/auth/login - Login user
-- GET /api/auth/me - Get current user
+## 📚 **API Documentation**  
 
-### Shipment Endpoints
-- GET /api/shipments - Get all shipments
-- GET /api/shipments/:id - Get single shipment
-- POST /api/shipments - Create new shipment
-- PUT /api/shipments/:id - Update shipment
-- DELETE /api/shipments/:id - Delete shipment
+### 🔐 **Authentication Endpoints**  
+| Method | Endpoint            | Description           |
+|--------|---------------------|-----------------------|
+| POST   | `/api/auth/register` | Register a new user  |
+| POST   | `/api/auth/login`    | Login user           |
+| GET    | `/api/auth/me`       | Get current user     |
 
-### Document Endpoints
-- GET /api/documents - Get all documents
-- GET /api/documents/:id - Get single document
-- POST /api/documents - Upload new document
-- PUT /api/documents/:id - Update document metadata
-- DELETE /api/documents/:id - Delete document
+### 📦 **Shipment Endpoints**  
+| Method | Endpoint              | Description          |
+|--------|-----------------------|----------------------|
+| GET    | `/api/shipments`       | Get all shipments   |
+| GET    | `/api/shipments/:id`   | Get single shipment |
+| POST   | `/api/shipments`       | Create new shipment |
+| PUT    | `/api/shipments/:id`   | Update shipment     |
+| DELETE | `/api/shipments/:id`   | Delete shipment     |
 
-### Carrier Endpoints
-- GET /api/carriers - Get available carriers
-- POST /api/carriers/rates - Get shipping rates
-- POST /api/carriers/schedules - Get carrier schedules
-- POST /api/carriers/book - Book shipment with carrier
+### 🗂️ **Document Endpoints**  
+| Method | Endpoint              | Description             |
+|--------|-----------------------|-------------------------|
+| GET    | `/api/documents`       | Get all documents      |
+| GET    | `/api/documents/:id`   | Get single document    |
+| POST   | `/api/documents`       | Upload new document    |
+| PUT    | `/api/documents/:id`   | Update document metadata |
+| DELETE | `/api/documents/:id`   | Delete document        |
 
-## Contributing
+### 🚛 **Carrier Endpoints**  
+| Method | Endpoint                 | Description              |
+|--------|--------------------------|--------------------------|
+| GET    | `/api/carriers`           | Get available carriers  |
+| POST   | `/api/carriers/rates`     | Get shipping rates      |
+| POST   | `/api/carriers/schedules` | Get carrier schedules   |
+| POST   | `/api/carriers/book`      | Book shipment with carrier |
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+---
 
-## License
+## 👥 **Contributing**  
 
-This project is licensed under the MIT License - see the LICENSE file for details
+We welcome contributions!  
+
+1. Fork the repository  
+2. Create your feature branch:  
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. Commit your changes:  
+   ```bash
+   git commit -m 'Add some AmazingFeature'
+   ```
+4. Push to the branch:  
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. Open a Pull Request  
+
+---
+
+## 📜 **License**  
+This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE) file for details.
+
+---
+
+### ✨ **Let's Simplify Exporting for Indian SMBs!**
+
+Feel free to reach out if you have any questions or suggestions. 🌟
+
+--- 
