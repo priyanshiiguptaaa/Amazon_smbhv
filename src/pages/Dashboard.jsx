@@ -120,11 +120,11 @@ const Dashboard = () => {
                 <span className="block mt-2 text-sm text-[#0F1111]">Upload Document</span>
               </Link>
               <Link 
-                to="/orders" 
+                to="/inventory" 
                 className="p-4 border border-[#D5D9D9] rounded-lg hover:border-[#FF9900] hover:bg-[#F7F8F8] transition-all duration-200 text-center"
               >
                 <Package className="h-6 w-6 text-[#FF9900] mx-auto" />
-                <span className="block mt-2 text-sm text-[#0F1111]">Create Order</span>
+                <span className="block mt-2 text-sm text-[#0F1111]">Add Products</span>
               </Link>
             </div>
           </div>

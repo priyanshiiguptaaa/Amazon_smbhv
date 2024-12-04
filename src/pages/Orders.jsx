@@ -12,7 +12,7 @@ import ReturnLabelsComponent from '../components/ReturnLabels';
 const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [carrierRates, setCarrierRates] = useState([]);
-  const [currency, setCurrency] = useState('USD');
+  const [currency, setCurrency] = useState('INR');  
   const [showAllCarriers, setShowAllCarriers] = useState(false);
   const [activeTab, setActiveTab] = useState('orders');
   const [filters, setFilters] = useState({
@@ -100,16 +100,42 @@ const Orders = () => {
     setCurrency(newCurrency);
   };
 
-  const formatPrice = (price, originalCurrency = 'USD') => {
-    try {
-      const converted = convertCurrency(price, originalCurrency, currency);
-      return new Intl.NumberFormat('en-US', { 
-        style: 'currency', 
-        currency: currency 
-      }).format(converted);
-    } catch (error) {
-      return price;
+  const formatPrice = (price) => {
+    const currencySymbols = {
+      INR: '₹',
+      USD: '$',
+      EUR: '€',
+      GBP: '£',
+      JPY: '¥',
+      AUD: 'A$'
+    };
+
+    let formattedPrice;
+    if (currency === 'INR') {
+      // Format in Indian numbering system (lakhs and crores)
+      formattedPrice = price.toLocaleString('en-IN', {
+        maximumFractionDigits: 0,
+        style: 'currency',
+        currency: 'INR'
+      });
+    } else {
+      // Convert from INR to selected currency
+      const conversionRates = {
+        USD: 0.012,  // 1 INR = 0.012 USD
+        EUR: 0.011,  // 1 INR = 0.011 EUR
+        GBP: 0.0095, // 1 INR = 0.0095 GBP
+        JPY: 1.77,   // 1 INR = 1.77 JPY
+        AUD: 0.018   // 1 INR = 0.018 AUD
+      };
+
+      const convertedPrice = price * (conversionRates[currency] || 1);
+      formattedPrice = currencySymbols[currency] + convertedPrice.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
     }
+
+    return formattedPrice;
   };
 
   const handleCarrierSelect = (rate) => {
@@ -228,10 +254,12 @@ const Orders = () => {
                   onChange={handleCurrencyChange}
                   className="w-full p-2 border rounded-md"
                 >
+                  <option value="INR">INR</option>
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
                   <option value="GBP">GBP</option>
-                  <option value="INR">INR</option>
+                  <option value="JPY">JPY</option>
+                  <option value="AUD">AUD</option>
                 </select>
               </div>
             </div>
@@ -440,9 +468,7 @@ const Orders = () => {
           </div>
         </>
       ) : (
-        <div className="bg-white rounded-lg shadow">
-          <ReturnLabelsComponent orders={mockOrders} />
-        </div>
+        <ReturnLabelsComponent orders={mockOrders} />
       )}
     </div>
   );

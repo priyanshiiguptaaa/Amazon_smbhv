@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useInventory } from '../contexts/InventoryContext';
 import { Search, Plus, Package, ArrowUpDown, Upload, Download, AlertTriangle, Edit, Trash } from 'lucide-react';
 import AddProductModal from '../components/AddProductModal';
+import SuggestedPackaging from '../components/SuggestedPackaging';
 import { importProducts, exportProducts, convertUnit } from '../api/inventory';
 
 const Inventory = () => {
@@ -222,13 +223,14 @@ const Inventory = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-[#E6E6E6]">
-                {filteredInventory.map((item) => {
-                  const isLowStock = item.quantity <= 10; // Assuming low stock threshold is 10
-                  const status = item.quantity === 0 ? 'Out of Stock' : isLowStock ? 'Low Stock' : 'In Stock';
-                  const statusColor = item.quantity === 0 ? 'text-red-600' : isLowStock ? 'text-yellow-600' : 'text-green-600';
-
-                  return (
-                    <tr key={item.id} className="hover:bg-[#F7FAFA]">
+                {filteredInventory.map((item) => (
+                  <React.Fragment key={item.id}>
+                    <tr 
+                      onClick={() => setSelectedProduct(item)}
+                      className={`hover:bg-[#F7FAFA] cursor-pointer transition-colors ${
+                        selectedProduct?.id === item.id ? 'bg-[#F7FAFA]' : ''
+                      }`}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="h-10 w-10 flex-shrink-0">
@@ -250,8 +252,8 @@ const Inventory = () => {
                         <div className="text-sm text-[#0F1111]">
                           {item.quantity} {item.unit}
                         </div>
-                        <div className={`text-sm ${statusColor}`}>
-                          {status}
+                        <div className={`text-sm ${item.quantity === 0 ? 'text-red-600' : item.quantity <= 10 ? 'text-yellow-600' : 'text-green-600'}`}>
+                          {item.quantity === 0 ? 'Out of Stock' : item.quantity <= 10 ? 'Low Stock' : 'In Stock'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -276,165 +278,180 @@ const Inventory = () => {
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => openEditModal(item)}
-                          className="text-[#0066C0] hover:text-[#004B8F] mr-4"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(item.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <Trash className="h-4 w-4" />
-                        </button>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openEditModal(item);
+                            }}
+                            className="text-[#565959] hover:text-[#232F3E]"
+                          >
+                            <Edit className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteProduct(item.id);
+                            }}
+                            className="text-[#565959] hover:text-red-600"
+                          >
+                            <Trash className="h-5 w-5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  );
-                })}
+                    {selectedProduct?.id === item.id && (
+                      <tr>
+                        <td colSpan="7" className="px-6 py-4">
+                          <SuggestedPackaging product={selectedProduct} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
-      </div>
 
-      {/* Edit Product Modal */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
-            <h2 className="text-xl font-medium mb-4">Edit Product</h2>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target);
-              const data = {
-                name: formData.get('name'),
-                sku: formData.get('sku'),
-                category: formData.get('category'),
-                quantity: parseInt(formData.get('quantity')),
-                unit: formData.get('unit'),
-                price: parseFloat(formData.get('price')),
-                supplier: formData.get('supplier'),
-                gst: formData.get('gst')
-              };
-              handleEditProduct(data);
-            }}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    defaultValue={selectedProduct.name}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">SKU</label>
-                  <input
-                    type="text"
-                    name="sku"
-                    defaultValue={selectedProduct.sku}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Category</label>
-                  <input
-                    type="text"
-                    name="category"
-                    defaultValue={selectedProduct.category}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                    required
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+        {/* Edit Product Modal */}
+        {isEditModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-lg w-full">
+              <h2 className="text-xl font-medium mb-4">Edit Product</h2>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = {
+                  name: formData.get('name'),
+                  sku: formData.get('sku'),
+                  category: formData.get('category'),
+                  quantity: parseInt(formData.get('quantity')),
+                  unit: formData.get('unit'),
+                  price: parseFloat(formData.get('price')),
+                  supplier: formData.get('supplier'),
+                  gst: formData.get('gst')
+                };
+                handleEditProduct(data);
+              }}>
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Quantity</label>
-                    <input
-                      type="number"
-                      name="quantity"
-                      defaultValue={selectedProduct.quantity}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Unit</label>
+                    <label className="block text-sm font-medium text-gray-700">Name</label>
                     <input
                       type="text"
-                      name="unit"
-                      defaultValue={selectedProduct.unit}
+                      name="name"
+                      defaultValue={selectedProduct.name}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
                       required
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">SKU</label>
+                    <input
+                      type="text"
+                      name="sku"
+                      defaultValue={selectedProduct.sku}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Category</label>
+                    <input
+                      type="text"
+                      name="category"
+                      defaultValue={selectedProduct.category}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Quantity</label>
+                      <input
+                        type="number"
+                        name="quantity"
+                        defaultValue={selectedProduct.quantity}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Unit</label>
+                      <input
+                        type="text"
+                        name="unit"
+                        defaultValue={selectedProduct.unit}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
+                    <input
+                      type="number"
+                      name="price"
+                      defaultValue={selectedProduct.price}
+                      step="0.01"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Supplier</label>
+                    <input
+                      type="text"
+                      name="supplier"
+                      defaultValue={selectedProduct.supplier}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">GST Rate</label>
+                    <select
+                      name="gst"
+                      defaultValue={selectedProduct.gst}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
+                      required
+                    >
+                      <option value="5%">5%</option>
+                      <option value="12%">12%</option>
+                      <option value="18%">18%</option>
+                      <option value="28%">28%</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
-                  <input
-                    type="number"
-                    name="price"
-                    defaultValue={selectedProduct.price}
-                    step="0.01"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Supplier</label>
-                  <input
-                    type="text"
-                    name="supplier"
-                    defaultValue={selectedProduct.supplier}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">GST Rate</label>
-                  <select
-                    name="gst"
-                    defaultValue={selectedProduct.gst}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                    required
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditModalOpen(false);
+                      setSelectedProduct(null);
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                   >
-                    <option value="5%">5%</option>
-                    <option value="12%">12%</option>
-                    <option value="18%">18%</option>
-                    <option value="28%">28%</option>
-                  </select>
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#FF9900] hover:bg-[#FA8900]"
+                  >
+                    Save Changes
+                  </button>
                 </div>
-              </div>
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditModalOpen(false);
-                    setSelectedProduct(null);
-                  }}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#FF9900] hover:bg-[#FA8900]"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <AddProductModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddProduct}
-      />
+        <AddProductModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onAdd={handleAddProduct}
+        />
+      </div>
     </div>
   );
 };
