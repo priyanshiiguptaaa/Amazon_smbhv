@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Leaf, Truck, Factory, Package, Globe, Info, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react';
-import { calculateCarbonFootprint, getHeritageData, getEcoTips, calculateSustainabilityScore, getSustainabilityRecommendations } from '../api/carbon';
+import { calculateCarbonFootprint, getEcoTips, calculateSustainabilityScore, getSustainabilityRecommendations } from '../api/carbon';
 
 const CarbonQuest = () => {
   const [period, setPeriod] = useState('month');
   const [carbonData, setCarbonData] = useState(null);
-  const [heritageSites, setHeritageSites] = useState([]);
   const [ecoTips, setEcoTips] = useState({});
   const [sustainabilityScore, setSustainabilityScore] = useState(null);
   const [recommendations, setRecommendations] = useState(null);
@@ -13,15 +12,13 @@ const CarbonQuest = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [carbon, heritage, tips, score, recs] = await Promise.all([
+      const [carbon, tips, score, recs] = await Promise.all([
         calculateCarbonFootprint(period),
-        getHeritageData(),
         getEcoTips('all'),
         calculateSustainabilityScore(),
         getSustainabilityRecommendations()
       ]);
       setCarbonData(carbon);
-      setHeritageSites(heritage);
       setEcoTips(tips);
       setSustainabilityScore(score);
       setRecommendations(recs);
@@ -36,7 +33,7 @@ const CarbonQuest = () => {
     return null;
   };
 
-  if (!carbonData || !heritageSites || !sustainabilityScore || !recommendations) {
+  if (!carbonData || !sustainabilityScore || !recommendations) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
@@ -68,7 +65,7 @@ const CarbonQuest = () => {
       {/* Tabs */}
       <div className="mb-6 border-b border-gray-200">
         <nav className="flex space-x-8">
-          {['overview', 'details', 'recommendations', 'heritage'].map((tab) => (
+          {['overview', 'details', 'recommendations'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -217,67 +214,6 @@ const CarbonQuest = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {activeTab === 'heritage' && (
-        <div className="space-y-6">
-          {/* Heritage Sites */}
-          {heritageSites.map((site) => (
-            <div key={site.name} className="bg-white shadow rounded-lg overflow-hidden">
-              <div className="md:flex">
-                <div className="md:flex-shrink-0">
-                  <img
-                    className="h-48 w-full object-cover md:w-48"
-                    src={site.imageUrl}
-                    alt={site.name}
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center">
-                    <h3 className="text-lg font-semibold">{site.name}</h3>
-                    <span className={`ml-3 px-2 py-1 text-sm rounded ${
-                      site.conservationStatus === 'Critical'
-                        ? 'bg-red-100 text-red-800'
-                        : site.conservationStatus === 'At Risk'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-orange-100 text-orange-800'
-                    }`}>
-                      {site.conservationStatus}
-                    </span>
-                  </div>
-                  <p className="text-gray-500 text-sm mt-1">{site.location}</p>
-                  <p className="mt-2">{site.description}</p>
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium mb-2">Environmental Threats:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {site.threats.map((threat, index) => (
-                        <span
-                          key={index}
-                          className="bg-red-50 text-red-700 text-sm px-2 py-1 rounded"
-                        >
-                          {threat}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium mb-2">Conservation Initiatives:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {site.initiatives.map((initiative, index) => (
-                        <span
-                          key={index}
-                          className="bg-green-50 text-green-700 text-sm px-2 py-1 rounded"
-                        >
-                          {initiative}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           ))}

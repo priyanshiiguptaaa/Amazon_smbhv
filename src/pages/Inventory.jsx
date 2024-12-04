@@ -211,6 +211,9 @@ const Inventory = () => {
                     Status & Alerts
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#565959] uppercase tracking-wider">
+                    Storage Location
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#565959] uppercase tracking-wider">
                     Expiry Date
                   </th>
                   <th scope="col" className="relative px-6 py-3">
@@ -256,7 +259,21 @@ const Inventory = () => {
                         <div className="text-sm text-[#565959]">GST: {item.gst}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-[#0F1111]">{item.location}</div>
+                        <div className="text-sm text-[#0F1111]">{item.location || 'Not Assigned'}</div>
+                        {item.zone && (
+                          <div className="text-sm text-[#565959]">Zone: {item.zone}</div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-[#0F1111]">
+                          {item.expiryDate ? new Date(item.expiryDate).toLocaleDateString() : 'N/A'}
+                        </div>
+                        {item.expiryDate && new Date(item.expiryDate) <= new Date() && (
+                          <div className="text-sm text-red-600">Expired</div>
+                        )}
+                        {item.expiryDate && new Date(item.expiryDate) > new Date() && new Date(item.expiryDate) <= new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) && (
+                          <div className="text-sm text-yellow-600">Expiring Soon</div>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
@@ -297,7 +314,6 @@ const Inventory = () => {
                 unit: formData.get('unit'),
                 price: parseFloat(formData.get('price')),
                 supplier: formData.get('supplier'),
-                location: formData.get('location'),
                 gst: formData.get('gst')
               };
               handleEditProduct(data);
@@ -372,16 +388,6 @@ const Inventory = () => {
                     type="text"
                     name="supplier"
                     defaultValue={selectedProduct.supplier}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    defaultValue={selectedProduct.location}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#FF9900] focus:ring-[#FF9900]"
                     required
                   />

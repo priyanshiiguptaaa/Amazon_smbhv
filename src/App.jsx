@@ -84,7 +84,14 @@ const App = () => {
                 <Routes>
                   {/* Public route */}
                   <Route path="/login" element={<Login />} />
-                  
+                  <Route
+                    path="/documents/upload"
+                    element={
+                      <DashboardLayout>
+                        <DocumentUpload />
+                      </DashboardLayout>
+                    }
+                  />
                   {/* Protected routes */}
                   <Route element={<ProtectedRoute />}>
                     <Route
@@ -116,14 +123,6 @@ const App = () => {
                       element={
                         <DashboardLayout>
                           <DocumentDetails />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/documents/upload"
-                      element={
-                        <DashboardLayout>
-                          <DocumentUpload />
                         </DashboardLayout>
                       }
                     />
