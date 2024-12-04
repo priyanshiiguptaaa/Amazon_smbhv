@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import shipmentsApi from '../api/shipments';
+import {
+    getAllShipments,
+    getShipmentById,
+    createShipment,
+    updateShipmentStatus,
+    updateCustomsStatus,
+    deleteShipment,
+    getShipmentStats
+} from '../api/shipments';
 
 const ShipmentsContext = createContext();
 
@@ -8,19 +16,24 @@ export const useShipments = () => {
     if (!context) {
         throw new Error('useShipments must be used within a ShipmentsProvider');
     }
-    return context;i
+    return context;
 };
 
 export const ShipmentsProvider = ({ children }) => {
     const [shipments, setShipments] = useState([]);
+    const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchShipments = async () => {
         try {
             setLoading(true);
-            const data = await shipmentsApi.getAllShipments();
-            setShipments(data);
+            const [shipmentsData, statsData] = await Promise.all([
+                getAllShipments(),
+                getShipmentStats()
+            ]);
+            setShipments(shipmentsData);
+            setStats(statsData);
             setError(null);
         } catch (err) {
             console.error('Error fetching shipments:', err);
@@ -32,7 +45,7 @@ export const ShipmentsProvider = ({ children }) => {
 
     const getShipment = async (shipmentId) => {
         try {
-            const shipment = await shipmentsApi.getShipmentById(shipmentId);
+            const shipment = await getShipmentById(shipmentId);
             return shipment;
         } catch (err) {
             console.error('Error fetching shipment:', err);
@@ -40,12 +53,27 @@ export const ShipmentsProvider = ({ children }) => {
         }
     };
 
-    const updateShipmentStatus = async (shipmentId, status) => {
+    const addShipment = async (shipmentData) => {
         try {
-            const updatedShipment = await shipmentsApi.updateShipmentStatus(shipmentId, status);
+            const newShipment = await createShipment(shipmentData);
+            setShipments(prev => [...prev, newShipment]);
+            await fetchShipments(); // Refresh stats
+            return newShipment;
+        } catch (err) {
+            console.error('Error creating shipment:', err);
+            throw err;
+        }
+    };
+
+    const updateStatus = async (shipmentId, status) => {
+        try {
+            const updatedShipment = await updateShipmentStatus(shipmentId, status);
             setShipments(prev => 
-                prev.map(shipment => shipment.shipmentId === shipmentId ? updatedShipment : shipment)
+                prev.map(shipment => 
+                    shipment.id === shipmentId ? updatedShipment : shipment
+                )
             );
+            await fetchShipments(); // Refresh stats
             return updatedShipment;
         } catch (err) {
             console.error('Error updating shipment status:', err);
@@ -53,15 +81,29 @@ export const ShipmentsProvider = ({ children }) => {
         }
     };
 
-    const updateCustomsClearance = async (shipmentId, status) => {
+    const updateCustoms = async (shipmentId, customsStatus) => {
         try {
-            const updatedShipment = await shipmentsApi.updateCustomsClearance(shipmentId, status);
+            const updatedShipment = await updateCustomsStatus(shipmentId, customsStatus);
             setShipments(prev => 
-                prev.map(shipment => shipment.shipmentId === shipmentId ? updatedShipment : shipment)
+                prev.map(shipment => 
+                    shipment.id === shipmentId ? updatedShipment : shipment
+                )
             );
+            await fetchShipments(); // Refresh stats
             return updatedShipment;
         } catch (err) {
-            console.error('Error updating customs clearance:', err);
+            console.error('Error updating customs status:', err);
+            throw err;
+        }
+    };
+
+    const removeShipment = async (shipmentId) => {
+        try {
+            await deleteShipment(shipmentId);
+            setShipments(prev => prev.filter(shipment => shipment.id !== shipmentId));
+            await fetchShipments(); // Refresh stats
+        } catch (err) {
+            console.error('Error deleting shipment:', err);
             throw err;
         }
     };
@@ -71,15 +113,18 @@ export const ShipmentsProvider = ({ children }) => {
     }, []);
 
     return (
-        <ShipmentsContext.Provider 
+        <ShipmentsContext.Provider
             value={{
                 shipments,
+                stats,
                 loading,
                 error,
-                fetchShipments,
                 getShipment,
-                updateShipmentStatus,
-                updateCustomsClearance
+                addShipment,
+                updateStatus,
+                updateCustoms,
+                removeShipment,
+                refreshShipments: fetchShipments
             }}
         >
             {children}

@@ -24,6 +24,7 @@ import { ProtectedRoute } from './auth/ProtectedRoute';
 import Login from './auth/Login';
 import { Toaster } from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
+import DocumentDetails from './pages/DocumentDetails';
 
 // Layout component for protected routes
 const DashboardLayout = ({ children }) => {
@@ -106,6 +107,14 @@ const App = () => {
                       element={
                         <DashboardLayout>
                           <Documents />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/documents/:id"
+                      element={
+                        <DashboardLayout>
+                          <DocumentDetails />
                         </DashboardLayout>
                       }
                     />

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import inventoryApi from '../api/inventory';
+import { getInventoryItems, createInventoryItem, updateInventoryItem, deleteInventoryItem } from '../api/inventory';
 
 const InventoryContext = createContext();
 
@@ -19,12 +19,13 @@ export const InventoryProvider = ({ children }) => {
     const fetchInventory = async () => {
         try {
             setLoading(true);
-            const data = await inventoryApi.getAllItems();
-            setInventory(data);
             setError(null);
+            const data = await getInventoryItems();
+            setInventory(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Error fetching inventory:', err);
-            setError('Failed to fetch inventory');
+            setError('Failed to fetch inventory. Please try again later.');
+            setInventory([]);
         } finally {
             setLoading(false);
         }
@@ -32,35 +33,31 @@ export const InventoryProvider = ({ children }) => {
 
     const addProduct = async (productData) => {
         try {
-            const newProduct = await inventoryApi.addProduct(productData);
-            setInventory(prev => [...prev, newProduct]);
-            return newProduct;
+            await createInventoryItem(productData);
+            await fetchInventory(); // Refresh the list
         } catch (err) {
             console.error('Error adding product:', err);
-            throw err;
+            throw new Error('Failed to add product. Please try again.');
         }
     };
 
-    const updateProduct = async (sku, productData) => {
+    const updateProduct = async (productId, productData) => {
         try {
-            const updatedProduct = await inventoryApi.updateProduct(sku, productData);
-            setInventory(prev => 
-                prev.map(item => item.sku === sku ? updatedProduct : item)
-            );
-            return updatedProduct;
+            await updateInventoryItem(productId, productData);
+            await fetchInventory(); // Refresh the list
         } catch (err) {
             console.error('Error updating product:', err);
-            throw err;
+            throw new Error('Failed to update product. Please try again.');
         }
     };
 
-    const deleteProduct = async (sku) => {
+    const deleteProduct = async (productId) => {
         try {
-            await inventoryApi.deleteProduct(sku);
-            setInventory(prev => prev.filter(item => item.sku !== sku));
+            await deleteInventoryItem(productId);
+            await fetchInventory(); // Refresh the list
         } catch (err) {
             console.error('Error deleting product:', err);
-            throw err;
+            throw new Error('Failed to delete product. Please try again.');
         }
     };
 
@@ -68,18 +65,18 @@ export const InventoryProvider = ({ children }) => {
         fetchInventory();
     }, []);
 
-    const value = {
-        inventory,
-        loading,
-        error,
-        fetchInventory,
-        addProduct,
-        updateProduct,
-        deleteProduct
-    };
-
     return (
-        <InventoryContext.Provider value={value}>
+        <InventoryContext.Provider
+            value={{
+                inventory,
+                loading,
+                error,
+                addProduct,
+                updateProduct,
+                deleteProduct,
+                refreshInventory: fetchInventory
+            }}
+        >
             {children}
         </InventoryContext.Provider>
     );

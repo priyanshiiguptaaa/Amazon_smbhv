@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { Package, Filter, Search, ChevronUp, ChevronDown, Truck, Clock, CheckCircle, AlertCircle, FileText } from 'lucide-react';
+import { Package, Filter, Search, ChevronUp, ChevronDown, Truck, Clock, CheckCircle, AlertCircle, FileText, X, TrendingUp, Printer, Box } from 'lucide-react';
 import { useShipments } from '../contexts/ShipmentsContext';
+import RateComparison from '../components/shipping/RateComparison';
+import LabelGeneration from '../components/shipping/LabelGeneration';
+import TrackingInfo from '../components/shipping/TrackingInfo';
+import CustomsDocuments from '../components/shipping/CustomsDocuments';
+import ContainerManagement from '../components/shipping/ContainerManagement';
 
 const ShipmentStats = ({ stats }) => {
     return (
@@ -127,7 +132,10 @@ const ShipmentsTable = ({ shipments, onStatusChange, onCustomsChange }) => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {shipments.map((shipment) => (
-                            <tr key={shipment.shipmentId} className="hover:bg-gray-50">
+                            <tr 
+                                key={shipment.shipmentId} 
+                                className="hover:bg-gray-50 cursor-pointer"
+                            >
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
                                     #{shipment.shipmentId}
                                 </td>
@@ -172,10 +180,90 @@ const ShipmentsTable = ({ shipments, onStatusChange, onCustomsChange }) => {
     );
 };
 
+const ShipmentModal = ({ shipment, isOpen, onClose }) => {
+    const [activeTab, setActiveTab] = useState('details');
+
+    if (!isOpen) return null;
+
+    const tabs = [
+        { id: 'details', label: 'Details', icon: Package },
+        { id: 'rates', label: 'Rates', icon: TrendingUp },
+        { id: 'labels', label: 'Labels', icon: Printer },
+        { id: 'tracking', label: 'Tracking', icon: Truck },
+        { id: 'customs', label: 'Customs', icon: FileText },
+        { id: 'container', label: 'Container', icon: Box }
+    ];
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden">
+                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                    <h2 className="text-xl font-semibold">Shipment #{shipment.shipmentId}</h2>
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+                        <X className="h-5 w-5" />
+                    </button>
+                </div>
+
+                {/* Tabs */}
+                <div className="border-b border-gray-200">
+                    <div className="flex overflow-x-auto">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`flex items-center px-4 py-2 space-x-2 border-b-2 ${
+                                    activeTab === tab.id
+                                        ? 'border-blue-500 text-blue-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700'
+                                }`}
+                            >
+                                <tab.icon className="h-4 w-4" />
+                                <span>{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Tab Content */}
+                <div className="p-4 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 8rem)' }}>
+                    {activeTab === 'details' && (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h3 className="text-sm font-medium text-gray-500">Customer</h3>
+                                    <p className="mt-1">{shipment.customerName}</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-medium text-gray-500">Status</h3>
+                                    <StatusBadge status={shipment.status} />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-medium text-gray-500">Origin</h3>
+                                    <p className="mt-1">{shipment.origin}</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-medium text-gray-500">Destination</h3>
+                                    <p className="mt-1">{shipment.destination}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {activeTab === 'rates' && <RateComparison shipmentId={shipment.shipmentId} />}
+                    {activeTab === 'labels' && <LabelGeneration shipmentId={shipment.shipmentId} />}
+                    {activeTab === 'tracking' && <TrackingInfo shipmentId={shipment.shipmentId} />}
+                    {activeTab === 'customs' && <CustomsDocuments shipmentId={shipment.shipmentId} />}
+                    {activeTab === 'container' && <ContainerManagement containerId={shipment.containerId} />}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const ShipmentsPage = () => {
     const { shipments, loading, error, updateShipmentStatus, updateCustomsClearance } = useShipments();
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [selectedShipment, setSelectedShipment] = useState(null);
 
     // Calculate stats
     const stats = {
@@ -187,10 +275,11 @@ const ShipmentsPage = () => {
 
     // Filter shipments
     const filteredShipments = shipments.filter(shipment => {
+        const searchTermLower = searchTerm.toLowerCase();
         const matchesSearch = 
-            shipment.shipmentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            shipment.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            shipment.destination.toLowerCase().includes(searchTerm.toLowerCase());
+            (shipment.shipmentId?.toLowerCase() || '').includes(searchTermLower) ||
+            (shipment.customerName?.toLowerCase() || '').includes(searchTermLower) ||
+            (shipment.destination?.toLowerCase() || '').includes(searchTermLower);
         const matchesStatus = filterStatus === 'all' || shipment.status === filterStatus;
         return matchesSearch && matchesStatus;
     });
@@ -272,6 +361,13 @@ const ShipmentsPage = () => {
                     onCustomsChange={handleCustomsChange}
                 />
             </div>
+            {selectedShipment && (
+                <ShipmentModal
+                    shipment={selectedShipment}
+                    isOpen={!!selectedShipment}
+                    onClose={() => setSelectedShipment(null)}
+                />
+            )}
         </div>
     );
 };
