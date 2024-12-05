@@ -42,7 +42,7 @@ const Navigation = ({ isCollapsed, onCollapse, onStartVideoCall, onOpenChat }) =
           <img 
             src="/image.png" 
             alt="Cargo Connect" 
-            className={`${isCollapsed ? 'h-8 w-8' : 'h-8'} object-contain bg-white rounded-sm`} 
+            className={`${isCollapsed ? 'h-8 w-8' : 'h-8'} object-contain rounded-sm`} 
           />
           {!isCollapsed && <span className="ml-2 text-lg font-semibold">Cargo Connect</span>}
         </div>
