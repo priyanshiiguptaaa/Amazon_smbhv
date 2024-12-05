@@ -1,83 +1,167 @@
 export const mockShipments = [
     {
-        shipmentId: "SHP-001",
-        orderId: "ORD-001",
+        shipmentId: "SHP001",
+        customerName: "Tech Solutions Inc.",
         status: "In Transit",
         origin: "Mumbai, India",
-        destination: "Singapore",
-        carrier: "Maersk Line",
-        trackingNumber: "ML123456789",
-        estimatedDelivery: "2024-02-15",
-        customsStatus: "Cleared",
-        documents: ["Bill of Lading", "Packing List", "Certificate of Origin"],
-        timeline: [
-            { date: "2024-01-15", status: "Order Received" },
-            { date: "2024-01-18", status: "Customs Clearance" },
-            { date: "2024-01-20", status: "Departed Port" }
-        ]
+        destination: "New York, USA",
+        carrier: "DHL Express",
+        shipmentDate: "2024-01-15",
+        weight: "45kg",
+        type: "International"
     },
     {
-        shipmentId: "SHP-002",
-        orderId: "ORD-002",
-        status: "Customs Clearance",
-        origin: "Delhi, India",
-        destination: "Dubai, UAE",
-        carrier: "Emirates Shipping",
-        trackingNumber: "ES987654321",
-        estimatedDelivery: "2024-02-20",
-        customsStatus: "In Progress",
-        documents: ["Commercial Invoice", "Export Declaration", "Insurance Certificate"],
-        timeline: [
-            { date: "2024-01-18", status: "Order Received" },
-            { date: "2024-01-22", status: "Documentation Complete" }
-        ]
-    },
-    {
-        shipmentId: "SHP-003",
-        orderId: "ORD-003",
-        status: "Preparing",
-        origin: "Chennai, India",
-        destination: "Hong Kong",
-        carrier: "COSCO",
-        trackingNumber: "CS456789123",
-        estimatedDelivery: "2024-02-25",
-        customsStatus: "Pending",
-        documents: ["Proforma Invoice"],
-        timeline: [
-            { date: "2024-01-20", status: "Order Received" }
-        ]
-    },
-    {
-        shipmentId: "SHP-004",
-        orderId: "ORD-004",
+        shipmentId: "SHP002",
+        customerName: "Global Traders Ltd",
         status: "Delivered",
-        origin: "Bangalore, India",
-        destination: "Hamburg, Germany",
-        carrier: "Hapag-Lloyd",
-        trackingNumber: "HL789123456",
-        estimatedDelivery: "2024-01-20",
-        customsStatus: "Cleared",
-        documents: ["Bill of Lading", "Health Certificate", "EUR.1 Movement Certificate"],
-        timeline: [
-            { date: "2024-01-22", status: "Order Received" },
-            { date: "2024-01-25", status: "Customs Clearance" },
-            { date: "2024-01-28", status: "Departed Port" },
-            { date: "2024-02-10", status: "Delivered" }
-        ]
+        origin: "Delhi, India",
+        destination: "London, UK",
+        carrier: "FedEx",
+        shipmentDate: "2024-01-14",
+        weight: "28kg",
+        type: "International"
     },
     {
-        shipmentId: "SHP-005",
-        orderId: "ORD-005",
-        status: "Documentation",
+        shipmentId: "SHP003",
+        customerName: "Local Retail Store",
+        status: "Processing",
+        origin: "Bangalore, India",
+        destination: "Chennai, India",
+        carrier: "BlueDart",
+        shipmentDate: "2024-01-16",
+        weight: "12kg",
+        type: "Domestic"
+    },
+    {
+        shipmentId: "SHP004",
+        customerName: "Electronics Hub",
+        status: "In Transit",
+        origin: "Shanghai, China",
+        destination: "Mumbai, India",
+        carrier: "UPS",
+        shipmentDate: "2024-01-13",
+        weight: "75kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP005",
+        customerName: "Fashion Trends Co.",
+        status: "Pending",
+        origin: "Paris, France",
+        destination: "Delhi, India",
+        carrier: "DHL Express",
+        shipmentDate: "2024-01-16",
+        weight: "32kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP006",
+        customerName: "Auto Parts Ltd",
+        status: "Delivered",
         origin: "Pune, India",
-        destination: "Sao Paulo, Brazil",
-        carrier: "MSC",
-        trackingNumber: "MSC321654987",
-        estimatedDelivery: "2024-03-01",
-        customsStatus: "Pending",
-        documents: ["Draft Bill of Lading"],
-        timeline: [
-            { date: "2024-01-25", status: "Order Received" }
-        ]
+        destination: "Hyderabad, India",
+        carrier: "BlueDart",
+        shipmentDate: "2024-01-12",
+        weight: "95kg",
+        type: "Domestic"
+    },
+    {
+        shipmentId: "SHP007",
+        customerName: "Smart Devices Inc",
+        status: "Processing",
+        origin: "Tokyo, Japan",
+        destination: "Bangalore, India",
+        carrier: "FedEx",
+        shipmentDate: "2024-01-15",
+        weight: "28kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP008",
+        customerName: "Green Earth Co",
+        status: "In Transit",
+        origin: "Amsterdam, Netherlands",
+        destination: "Mumbai, India",
+        carrier: "UPS",
+        shipmentDate: "2024-01-14",
+        weight: "42kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP009",
+        customerName: "Digital Solutions",
+        status: "Pending",
+        origin: "Kolkata, India",
+        destination: "Dubai, UAE",
+        carrier: "DHL Express",
+        shipmentDate: "2024-01-16",
+        weight: "18kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP010",
+        customerName: "Organic Foods Ltd",
+        status: "Delivered",
+        origin: "Chennai, India",
+        destination: "Pune, India",
+        carrier: "BlueDart",
+        shipmentDate: "2024-01-13",
+        weight: "65kg",
+        type: "Domestic"
+    },
+    {
+        shipmentId: "SHP011",
+        customerName: "Global Pharma Inc",
+        status: "In Transit",
+        origin: "Geneva, Switzerland",
+        destination: "Delhi, India",
+        carrier: "FedEx",
+        shipmentDate: "2024-01-15",
+        weight: "22kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP012",
+        customerName: "Tech Hardware Co",
+        status: "Processing",
+        origin: "Seoul, South Korea",
+        destination: "Bangalore, India",
+        carrier: "UPS",
+        shipmentDate: "2024-01-16",
+        weight: "56kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP013",
+        customerName: "Fashion Forward",
+        status: "Delivered",
+        origin: "Mumbai, India",
+        destination: "Singapore",
+        carrier: "DHL Express",
+        shipmentDate: "2024-01-12",
+        weight: "34kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP014",
+        customerName: "Auto Electronics",
+        status: "In Transit",
+        origin: "Detroit, USA",
+        destination: "Chennai, India",
+        carrier: "FedEx",
+        shipmentDate: "2024-01-14",
+        weight: "88kg",
+        type: "International"
+    },
+    {
+        shipmentId: "SHP015",
+        customerName: "Smart Home Solutions",
+        status: "Pending",
+        origin: "Berlin, Germany",
+        destination: "Mumbai, India",
+        carrier: "UPS",
+        shipmentDate: "2024-01-15",
+        weight: "45kg",
+        type: "International"
     }
 ];

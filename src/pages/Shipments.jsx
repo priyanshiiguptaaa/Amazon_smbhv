@@ -78,7 +78,7 @@ const StatusBadge = ({ status }) => {
     );
 };
 
-const ShipmentsTable = ({ shipments, onStatusChange, onCustomsChange }) => {
+const ShipmentsTable = ({ shipments, onStatusChange }) => {
     const [sortField, setSortField] = useState('shipmentDate');
     const [sortDirection, setSortDirection] = useState('desc');
 
@@ -163,12 +163,6 @@ const ShipmentsTable = ({ shipments, onStatusChange, onCustomsChange }) => {
                                         className="text-blue-600 hover:text-blue-900"
                                     >
                                         Update Status
-                                    </button>
-                                    <button 
-                                        onClick={() => onCustomsChange(shipment.shipmentId, 'In Progress')}
-                                        className="text-blue-600 hover:text-blue-900"
-                                    >
-                                        Update Customs
                                     </button>
                                 </td>
                             </tr>
@@ -260,7 +254,7 @@ const ShipmentModal = ({ shipment, isOpen, onClose }) => {
 };
 
 const ShipmentsPage = () => {
-    const { shipments, loading, error, updateShipmentStatus, updateCustomsClearance } = useShipments();
+    const { shipments, loading, error, updateShipmentStatus } = useShipments();
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [selectedShipment, setSelectedShipment] = useState(null);
@@ -289,14 +283,6 @@ const ShipmentsPage = () => {
             await updateShipmentStatus(shipmentId, newStatus);
         } catch (error) {
             console.error('Error updating shipment status:', error);
-        }
-    };
-
-    const handleCustomsChange = async (shipmentId, newStatus) => {
-        try {
-            await updateCustomsClearance(shipmentId, newStatus);
-        } catch (error) {
-            console.error('Error updating customs status:', error);
         }
     };
 
@@ -358,7 +344,6 @@ const ShipmentsPage = () => {
                 <ShipmentsTable 
                     shipments={filteredShipments}
                     onStatusChange={handleStatusChange}
-                    onCustomsChange={handleCustomsChange}
                 />
             </div>
             {selectedShipment && (

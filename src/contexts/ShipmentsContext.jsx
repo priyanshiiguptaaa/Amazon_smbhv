@@ -4,8 +4,6 @@ import {
     getShipmentById,
     createShipment,
     updateShipmentStatus,
-    updateCustomsStatus,
-    deleteShipment,
     getShipmentStats
 } from '../api/shipments';
 
@@ -42,6 +40,10 @@ export const ShipmentsProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchShipments();
+    }, []);
 
     const getShipment = async (shipmentId) => {
         try {
@@ -81,52 +83,19 @@ export const ShipmentsProvider = ({ children }) => {
         }
     };
 
-    const updateCustoms = async (shipmentId, customsStatus) => {
-        try {
-            const updatedShipment = await updateCustomsStatus(shipmentId, customsStatus);
-            setShipments(prev => 
-                prev.map(shipment => 
-                    shipment.id === shipmentId ? updatedShipment : shipment
-                )
-            );
-            await fetchShipments(); // Refresh stats
-            return updatedShipment;
-        } catch (err) {
-            console.error('Error updating customs status:', err);
-            throw err;
-        }
+    const value = {
+        shipments,
+        stats,
+        loading,
+        error,
+        getShipment,
+        addShipment,
+        updateShipmentStatus: updateStatus,
+        refreshShipments: fetchShipments
     };
-
-    const removeShipment = async (shipmentId) => {
-        try {
-            await deleteShipment(shipmentId);
-            setShipments(prev => prev.filter(shipment => shipment.id !== shipmentId));
-            await fetchShipments(); // Refresh stats
-        } catch (err) {
-            console.error('Error deleting shipment:', err);
-            throw err;
-        }
-    };
-
-    useEffect(() => {
-        fetchShipments();
-    }, []);
 
     return (
-        <ShipmentsContext.Provider
-            value={{
-                shipments,
-                stats,
-                loading,
-                error,
-                getShipment,
-                addShipment,
-                updateStatus,
-                updateCustoms,
-                removeShipment,
-                refreshShipments: fetchShipments
-            }}
-        >
+        <ShipmentsContext.Provider value={value}>
             {children}
         </ShipmentsContext.Provider>
     );
