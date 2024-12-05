@@ -1,9 +1,9 @@
 import React from 'react';
-import { User, Mail, Phone, Building, ExternalLink } from 'lucide-react';
+import { User, Mail, Phone, Building, ExternalLink, LogOut } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 
 const AccountInfo = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
 
     const openAmazonAccount = () => {
         window.open('https://sellercentral.amazon.in', '_blank');
@@ -79,11 +79,17 @@ const AccountInfo = () => {
 
                         {/* Action Buttons */}
                         <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4">
-                            <button className="mb-3 sm:mb-0 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <button 
+                                className="mb-3 sm:mb-0 inline-flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            >
                                 Update Profile
                             </button>
-                            <button className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Change Password
+                            <button 
+                                onClick={logout}
+                                className="inline-flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            >
+                                <LogOut className="w-4 h-4 mr-2" />
+                                Logout
                             </button>
                         </div>
                     </div>

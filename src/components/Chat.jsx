@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  connectToChat, 
-  disconnectFromChat, 
-  sendMessage, 
-  translateText, 
-  detectLanguage 
-} from '../utils/communicationUtils';
 import { Send, Globe, X, Minimize2, Maximize2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const Chat = ({ userId, userName, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -16,40 +10,44 @@ const Chat = ({ userId, userName, onClose }) => {
   const [preferredLanguage, setPreferredLanguage] = useState('en');
   const [isMinimized, setIsMinimized] = useState(false);
   const messagesEndRef = useRef(null);
-  const socket = useRef(null);
-
-  useEffect(() => {
-    // Connect to chat server
-    socket.current = connectToChat();
-
-    // Listen for incoming messages
-    socket.current.on('message', async (message) => {
-      if (isTranslating && message.language !== preferredLanguage) {
-        try {
-          const translatedMessage = await translateText(
-            message.content,
-            message.language,
-            preferredLanguage
-          );
-          message.translatedContent = translatedMessage.translatedText;
-        } catch (error) {
-          console.error('Translation error:', error);
-          toast.error('Failed to translate message');
-        }
-      }
-      setMessages(prev => [...prev, message]);
-    });
-
-    // Cleanup on unmount
-    return () => {
-      disconnectFromChat();
-    };
-  }, [isTranslating, preferredLanguage]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const translateMessage = async (text, fromLang, toLang) => {
+    try {
+      const GOOGLE_CLOUD_API_KEY = import.meta.env.VITE_GOOGLE_CLOUD_API_KEY;
+      const response = await axios.post(
+        `https://translation.googleapis.com/language/translate/v2?key=${GOOGLE_CLOUD_API_KEY}`,
+        {
+          q: text,
+          source: fromLang,
+          target: toLang,
+          format: 'text'
+        }
+      );
+      return response.data.data.translations[0].translatedText;
+    } catch (error) {
+      console.error('Translation error:', error);
+      return text; // Fallback to original text
+    }
+  };
+
+  const detectLanguage = async (text) => {
+    try {
+      const GOOGLE_CLOUD_API_KEY = import.meta.env.VITE_GOOGLE_CLOUD_API_KEY;
+      const response = await axios.post(
+        `https://translation.googleapis.com/language/translate/v2/detect?key=${GOOGLE_CLOUD_API_KEY}`,
+        { q: text }
+      );
+      return response.data.data.detections[0][0].language;
+    } catch (error) {
+      console.error('Language detection error:', error);
+      return 'en'; // Fallback to English
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
@@ -61,12 +59,24 @@ const Chat = ({ userId, userName, onClose }) => {
         userId,
         userName,
         content: newMessage,
-        language: detectedLang.language,
+        language: detectedLang,
         timestamp: new Date().toISOString(),
       };
 
-      sendMessage(message);
+      // If translation is enabled and the message is not in preferred language,
+      // translate it before adding to messages
+      if (isTranslating && detectedLang !== preferredLanguage) {
+        const translatedContent = await translateMessage(
+          newMessage,
+          detectedLang,
+          preferredLanguage
+        );
+        message.translatedContent = translatedContent;
+      }
+
+      setMessages(prev => [...prev, message]);
       setNewMessage('');
+      toast.success('Message sent!');
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error('Failed to send message');
@@ -99,67 +109,71 @@ const Chat = ({ userId, userName, onClose }) => {
     <div className="fixed bottom-4 right-4 w-96 bg-white rounded-lg shadow-lg flex flex-col">
       {/* Chat header */}
       <div className="p-4 border-b flex items-center justify-between bg-gray-50 rounded-t-lg">
-        <h3 className="font-semibold">Chat</h3>
         <div className="flex items-center space-x-2">
+          <h3 className="font-semibold">Chat Support</h3>
           <button
             onClick={toggleTranslation}
-            className={`p-2 rounded-full ${
-              isTranslating ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'
+            className={`p-1 rounded ${
+              isTranslating ? 'text-blue-600' : 'text-gray-400'
             }`}
-            title="Toggle translation"
+            title={isTranslating ? 'Disable translation' : 'Enable translation'}
           >
             <Globe className="w-4 h-4" />
           </button>
+        </div>
+        <div className="flex items-center space-x-2">
           <button
             onClick={() => setIsMinimized(true)}
-            className="p-2 rounded-full hover:bg-gray-100"
+            className="text-gray-400 hover:text-gray-600"
           >
             <Minimize2 className="w-4 h-4" />
           </button>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100"
+            className="text-gray-400 hover:text-gray-600"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Messages container */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-96">
+      {/* Messages area */}
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto max-h-96">
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex flex-col ${
-              message.userId === userId ? 'items-end' : 'items-start'
+            className={`flex ${
+              message.userId === userId ? 'justify-end' : 'justify-start'
             }`}
           >
-            <div className="flex items-center space-x-2 mb-1">
-              <span className="text-sm text-gray-600">{message.userName}</span>
-              <span className="text-xs text-gray-400">
-                {new Date(message.timestamp).toLocaleTimeString()}
-              </span>
-            </div>
             <div
-              className={`rounded-lg p-3 max-w-[80%] ${
+              className={`max-w-[80%] rounded-lg p-3 ${
                 message.userId === userId
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100'
+                  ? 'bg-blue-600 text-white'
+                  : message.userId === 'system'
+                  ? 'bg-gray-100 text-gray-800'
+                  : 'bg-gray-200 text-gray-800'
               }`}
             >
-              <p>{message.content}</p>
-              {message.translatedContent && (
-                <p className="mt-1 text-sm text-gray-200 border-t border-gray-300 pt-1">
-                  {message.translatedContent}
-                </p>
+              {message.userId !== userId && message.userId !== 'system' && (
+                <div className="text-xs text-gray-600 mb-1">{message.userName}</div>
               )}
+              <div>{message.translatedContent || message.content}</div>
+              {message.translatedContent && (
+                <div className="text-xs mt-1 opacity-75">
+                  Original: {message.content}
+                </div>
+              )}
+              <div className="text-xs opacity-75 mt-1">
+                {new Date(message.timestamp).toLocaleTimeString()}
+              </div>
             </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Message input */}
+      {/* Input area */}
       <div className="p-4 border-t">
         <div className="flex items-center space-x-2">
           <input
@@ -167,12 +181,12 @@ const Chat = ({ userId, userName, onClose }) => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            placeholder="Type a message..."
+            placeholder="Type your message..."
             className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleSendMessage}
-            className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             <Send className="w-4 h-4" />
           </button>

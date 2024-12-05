@@ -13,11 +13,14 @@ import {
   Video,
   MessageCircle,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  LogOut
 } from 'lucide-react';
+import { useAuth } from '../auth/AuthContext';
 
 const Navigation = ({ isCollapsed, onCollapse, onStartVideoCall, onOpenChat }) => {
   const location = useLocation();
+  const { logout } = useAuth();
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -36,7 +39,7 @@ const Navigation = ({ isCollapsed, onCollapse, onStartVideoCall, onOpenChat }) =
   ];
 
   return (
-    <nav className={`fixed h-full ${isCollapsed ? 'w-20' : 'w-64'} bg-[#232F3E] text-white p-4 transition-all duration-300 ease-in-out`}>
+    <nav className={`fixed h-full ${isCollapsed ? 'w-20' : 'w-64'} bg-[#232F3E] text-white p-4 transition-all duration-300 ease-in-out flex flex-col`}>
       <div className="flex items-center justify-between mb-8">
         <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : ''}`}>
           <img 
@@ -55,7 +58,7 @@ const Navigation = ({ isCollapsed, onCollapse, onStartVideoCall, onOpenChat }) =
           </button>
         )}
       </div>
-      <div className="space-y-2">
+      <div className="flex-1 space-y-2">
         {navigationItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -107,14 +110,6 @@ const Navigation = ({ isCollapsed, onCollapse, onStartVideoCall, onOpenChat }) =
           </button>
         </div>
       </div>
-      {isCollapsed && (
-        <button
-          onClick={() => onCollapse(!isCollapsed)}
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-gray-400 hover:text-white transition-colors"
-        >
-          <PanelLeftOpen className="h-5 w-5" />
-        </button>
-      )}
     </nav>
   );
 };

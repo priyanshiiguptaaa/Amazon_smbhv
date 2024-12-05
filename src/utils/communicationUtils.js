@@ -1,6 +1,10 @@
 import { io } from 'socket.io-client';
 import axios from 'axios';
 
+// Google Cloud Translation API configuration
+const GOOGLE_CLOUD_API_KEY = import.meta.env.VITE_GOOGLE_CLOUD_API_KEY;
+const TRANSLATION_API_URL = 'https://translation.googleapis.com/language/translate/v2';
+
 // Socket connection for real-time communication
 const socket = io('http://localhost:3001', {
   autoConnect: false,
@@ -55,79 +59,54 @@ export const leaveRoom = (roomId, userId) => {
   socket.emit('leave-room', { roomId, userId });
 };
 
-// Translation Service
+// Translation Service using Google Cloud Translation REST API
 export const translateText = async (text, fromLang, toLang) => {
   try {
-    // Mock translation (replace with actual translation API)
-    const commonPhrases = {
-      'en-hi': {
-        'Hello': 'नमस्ते',
-        'How are you?': 'आप कैसे हैं?',
-        'Thank you': 'धन्यवाद',
-        'Shipping status': 'शिपिंग स्थिति',
-        'Order confirmed': 'आदेश की पुष्टि की',
-      },
-      'hi-en': {
-        'नमस्ते': 'Hello',
-        'आप कैसे हैं?': 'How are you?',
-        'धन्यवाद': 'Thank you',
-        'शिपिंग स्थिति': 'Shipping status',
-        'आदेश की पुष्टि की': 'Order confirmed',
-      },
-    };
+    const response = await axios.post(`${TRANSLATION_API_URL}?key=${GOOGLE_CLOUD_API_KEY}`, {
+      q: text,
+      source: fromLang,
+      target: toLang,
+      format: 'text'
+    });
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    const langPair = `${fromLang}-${toLang}`;
-    if (commonPhrases[langPair] && commonPhrases[langPair][text]) {
-      return {
-        translatedText: commonPhrases[langPair][text],
-        confidence: 0.95,
-        detectedLanguage: fromLang,
-      };
-    }
-
-    // For unknown phrases, return a simulated translation
     return {
-      translatedText: text, // In real implementation, this would be the translated text
-      confidence: 0.8,
+      translatedText: response.data.data.translations[0].translatedText,
+      confidence: 1.0,
       detectedLanguage: fromLang,
     };
   } catch (error) {
     console.error('Error translating text:', error);
-    throw error;
+    // Fallback to original text if translation fails
+    return {
+      translatedText: text,
+      confidence: 0,
+      detectedLanguage: fromLang,
+      error: error.message,
+    };
   }
 };
 
-// Language Detection
+// Language Detection using Google Cloud Translation REST API
 export const detectLanguage = async (text) => {
   try {
-    // Mock language detection (replace with actual language detection API)
-    const commonPatterns = {
-      en: /^[a-zA-Z\s.,!?]+$/,
-      hi: /[\u0900-\u097F]/,
-    };
+    const response = await axios.post(
+      `${TRANSLATION_API_URL}/detect?key=${GOOGLE_CLOUD_API_KEY}`,
+      { q: text }
+    );
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    for (const [lang, pattern] of Object.entries(commonPatterns)) {
-      if (pattern.test(text)) {
-        return {
-          language: lang,
-          confidence: 0.9,
-        };
-      }
-    }
-
+    const detection = response.data.data.detections[0][0];
     return {
-      language: 'en', // Default to English
-      confidence: 0.6,
+      language: detection.language,
+      confidence: detection.confidence,
     };
   } catch (error) {
     console.error('Error detecting language:', error);
-    throw error;
+    // Fallback to English if detection fails
+    return {
+      language: 'en',
+      confidence: 0,
+      error: error.message,
+    };
   }
 };
 
